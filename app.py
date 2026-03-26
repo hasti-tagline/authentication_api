@@ -1,3 +1,5 @@
+# login authenticatin system in python
+
 from flask import Flask, request, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required
 import sqlite3
@@ -8,10 +10,10 @@ import datetime
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
 
-# JWT Secret
+
 JWT_SECRET = "jwtsecretkey"
 
-# Login Manager
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -30,7 +32,7 @@ def create_table():
 
 create_table()
 
-# USER CLASS
+# user class
 class User(UserMixin):
     def __init__(self, id):
         self.id = id
@@ -39,7 +41,7 @@ class User(UserMixin):
 def load_user(user_id):
     return User(user_id)
 
-# REGISTER 
+# register
 @app.route("/register", methods=["POST"])
 def register():
     data = request.json
@@ -57,7 +59,7 @@ def register():
     except:
         return jsonify({"error": "User already exists"})
 
-#LOGIN
+# login
 @app.route("/login", methods=["POST"])
 def login():
     data = request.json
