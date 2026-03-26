@@ -17,7 +17,8 @@ JWT_SECRET = "jwtsecretkey"
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-#Database
+# database
+
 def get_db():
     return sqlite3.connect("database.db")
 
@@ -37,11 +38,14 @@ class User(UserMixin):
     def __init__(self, id):
         self.id = id
 
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User(user_id)
 
-# register
+# Register
+
 @app.route("/register", methods=["POST"])
 def register():
     data = request.json
@@ -59,7 +63,7 @@ def register():
     except:
         return jsonify({"error": "User already exists"})
 
-# login
+# Login
 @app.route("/login", methods=["POST"])
 def login():
     data = request.json
@@ -74,7 +78,6 @@ def login():
         user_obj = User(user[0])
         login_user(user_obj)
 
-        # Generate JWT
         token = jwt.encode({
             "user_id": user[0],
             "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
@@ -84,13 +87,15 @@ def login():
 
     return jsonify({"error": "Invalid credentials"})
 
-#  PROTECTED ROUTE 
+#  protected route
+
 @app.route("/dashboard", methods=["GET"])
 @login_required
 def dashboard():
     return jsonify({"message": "Welcome to secure dashboard"})
 
-#JWT PROTECTED ROUTE
+# jwt proteced route
+
 @app.route("/api", methods=["GET"])
 def api():
     token = request.headers.get("Authorization")
